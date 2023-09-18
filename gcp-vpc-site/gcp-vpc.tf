@@ -50,18 +50,18 @@ resource "google_project_iam_binding" "this" {
   ]
 }
 
-output "inside_vpc_id" {
+output "gcp_inside_vpc_id" {
   value = google_compute_network.inside.id
 }
 
-output "inside_subnets" {
+output "gcp_inside_subnet" {
   value = google_compute_subnetwork.inside.id
 }
 
-output "outside_vpc_id" {
+output "gcp_outside_vpc_id" {
   value = google_compute_network.outside.id
 }
 
-output "outside_subnets" {
+output "gcp_outside_subnet" {
   value = google_compute_subnetwork.outside.id
 }
