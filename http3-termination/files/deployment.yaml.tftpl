@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      securityContext:
+        fsGroup: 101
+      containers:
+        - image: ${nginx_image}
+          imagePullPolicy: Always
+          name: nginx
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: certs
+              readOnly: true
+              mountPath: "/etc/nginx/certs"
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: certs
+          secret:
+            secretName: ${server_name}

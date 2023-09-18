@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    worker_processes  auto;
+
+    error_log  /dev/stdout notice;
+    pid        /tmp/nginx.pid;
+
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+      proxy_temp_path /tmp/proxy_temp;
+      client_body_temp_path /tmp/client_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
+
+      server {
+        # for better compatibility we recommend
+        # using the same port number for QUIC and TCP
+        listen 8443 http3 reuseport; # QUIC
+        listen 8443 ssl;             # TCP
+
+        ssl_certificate     certs/server.crt;
+        ssl_certificate_key certs/server.key;
+        ssl_protocols       TLSv1.3;
+
+        location / {
+          # advertise that QUIC is available on the configured port
+          add_header Alt-Svc 'h3=":$server_port"; ma=86400';
+
+          # signal whether we are using QUIC+HTTP/3
+          add_header X-protocol $server_protocol always;
+
+          proxy_pass http://httpbin.org/;
+        }
+      }
+    }
