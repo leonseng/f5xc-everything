@@ -36,7 +36,7 @@ resource "volterra_aws_vpc_site" "this" {
     }
 
     dynamic "az_nodes" {
-      for_each = range(0, var.az_count)
+      for_each = range(0, var.aws_az_count)
       content {
         aws_az_name = data.aws_availability_zones.available.names[az_nodes.key]
         disk_size   = 80

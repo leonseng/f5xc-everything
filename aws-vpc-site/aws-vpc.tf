@@ -1,5 +1,5 @@
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
+  cidr_block           = var.aws_vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -21,9 +21,9 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_subnet" "inside" {
-  count = var.az_count
+  count = var.aws_az_count
 
-  cidr_block        = cidrsubnet(cidrsubnet(var.vpc_cidr, 4, 0), 4, count.index + 1)
+  cidr_block        = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 0), 4, count.index + 1)
   vpc_id            = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
@@ -33,9 +33,9 @@ resource "aws_subnet" "inside" {
 }
 
 resource "aws_subnet" "outside" {
-  count = var.az_count
+  count = var.aws_az_count
 
-  cidr_block              = cidrsubnet(cidrsubnet(var.vpc_cidr, 4, 1), 4, count.index + 1)
+  cidr_block              = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 1), 4, count.index + 1)
   vpc_id                  = aws_vpc.main.id
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
@@ -46,9 +46,9 @@ resource "aws_subnet" "outside" {
 }
 
 resource "aws_subnet" "workload" {
-  count = var.az_count
+  count = var.aws_az_count
 
-  cidr_block        = cidrsubnet(cidrsubnet(var.vpc_cidr, 4, 3), 4, count.index + 1)
+  cidr_block        = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 3), 4, count.index + 1)
   vpc_id            = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
