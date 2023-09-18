@@ -107,30 +107,30 @@ resource "aws_security_group" "ce_sli" {
   }
 }
 
-output "vpc_id" {
+output "aws_vpc_id" {
   value = aws_vpc.main.id
 }
 
-output "igw_id" {
+output "aws_igw_id" {
   value = aws_internet_gateway.this.id
 }
 
-output "sg_ce_slo" {
+output "aws_sg_ce_slo" {
   value = aws_security_group.ce_slo.id
 }
 
-output "sg_ce_sli" {
+output "aws_sg_ce_sli" {
   value = aws_security_group.ce_sli.id
 }
 
-output "outside_subnets" {
+output "aws_outside_subnets" {
   value = aws_subnet.outside[*].id
 }
 
-output "inside_subnets" {
+output "aws_inside_subnets" {
   value = aws_subnet.inside[*].id
 }
 
-output "workload_subnets" {
+output "aws_workload_subnets" {
   value = aws_subnet.workload[*].id
 }
