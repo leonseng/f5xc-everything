@@ -1,7 +1,7 @@
 data "google_compute_zones" "available" {}
 
 resource "volterra_gcp_vpc_site" "this" {
-  depends_on = [volterra_cloud_credentials.gcp]
+  depends_on = [google_project_iam_binding.this, volterra_cloud_credentials.gcp]
 
   name                    = "${local.name_prefix}-gcp"
   namespace               = "system"
