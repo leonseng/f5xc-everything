@@ -6,17 +6,17 @@ variable "gcp_region" {
   type = string
 }
 
-variable "inside_vpc_cidr" {
+variable "gcp_inside_vpc_cidr" {
   type    = string
   default = "10.0.0.0/16"
 }
 
-variable "outside_vpc_cidr" {
+variable "gcp_outside_vpc_cidr" {
   type    = string
   default = "10.1.0.0/16"
 }
 
-variable "az_count" {
+variable "gcp_zone_count" {
   type    = number
   default = 1
 }

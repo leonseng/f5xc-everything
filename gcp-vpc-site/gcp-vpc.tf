@@ -5,7 +5,7 @@ resource "google_compute_network" "inside" {
 
 resource "google_compute_subnetwork" "inside" {
   name          = "${local.name_prefix}-inside"
-  ip_cidr_range = cidrsubnet(var.inside_vpc_cidr, 8, 1)
+  ip_cidr_range = cidrsubnet(var.gcp_inside_vpc_cidr, 8, 1)
   region        = var.gcp_region
   network       = google_compute_network.inside.name
 }
@@ -17,7 +17,7 @@ resource "google_compute_network" "outside" {
 
 resource "google_compute_subnetwork" "outside" {
   name          = "${local.name_prefix}-outside"
-  ip_cidr_range = cidrsubnet(var.outside_vpc_cidr, 8, 1)
+  ip_cidr_range = cidrsubnet(var.gcp_outside_vpc_cidr, 8, 1)
   region        = var.gcp_region
   network       = google_compute_network.outside.name
 }

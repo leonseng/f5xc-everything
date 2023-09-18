@@ -21,9 +21,9 @@ resource "volterra_gcp_vpc_site" "this" {
   }
 
   ingress_egress_gw {
-    node_number              = var.az_count
+    node_number              = var.gcp_zone_count
     gcp_certified_hw         = "gcp-byol-multi-nic-voltmesh"
-    gcp_zone_names           = slice(data.google_compute_zones.available.names, 0, var.az_count)
+    gcp_zone_names           = slice(data.google_compute_zones.available.names, 0, var.gcp_zone_count)
     no_global_network        = true
     no_dc_cluster_group      = true
     no_forward_proxy         = true
@@ -62,12 +62,12 @@ resource "volterra_gcp_vpc_site" "this" {
   }
 }
 
-resource "volterra_tf_params_action" "gcp_site_provisioner" {
-  depends_on = [
-    volterra_gcp_vpc_site.this
-  ]
-  site_name       = "${local.name_prefix}-gcp"
-  site_kind       = "gcp_vpc_site"
-  action          = "apply"
-  wait_for_action = true
-}
+# resource "volterra_tf_params_action" "gcp_site_provisioner" {
+#   depends_on = [
+#     volterra_gcp_vpc_site.this
+#   ]
+#   site_name       = "${local.name_prefix}-gcp"
+#   site_kind       = "gcp_vpc_site"
+#   action          = "apply"
+#   wait_for_action = true
+# }
