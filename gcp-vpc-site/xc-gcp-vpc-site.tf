@@ -1,3 +1,16 @@
+resource "volterra_cloud_credentials" "gcp" {
+  name      = "${local.name_prefix}-gcp-cc"
+  namespace = "system"
+
+  gcp_cred_file {
+    credential_file {
+      clear_secret_info {
+        url = "string:///${google_service_account_key.this.private_key}"
+      }
+    }
+  }
+}
+
 data "google_compute_zones" "available" {}
 
 resource "volterra_gcp_vpc_site" "this" {
@@ -62,12 +75,12 @@ resource "volterra_gcp_vpc_site" "this" {
   }
 }
 
-# resource "volterra_tf_params_action" "gcp_site_provisioner" {
-#   depends_on = [
-#     volterra_gcp_vpc_site.this
-#   ]
-#   site_name       = "${local.name_prefix}-gcp"
-#   site_kind       = "gcp_vpc_site"
-#   action          = "apply"
-#   wait_for_action = true
-# }
+resource "volterra_tf_params_action" "gcp_site_provisioner" {
+  depends_on = [
+    volterra_gcp_vpc_site.this
+  ]
+  site_name       = "${local.name_prefix}-gcp"
+  site_kind       = "gcp_vpc_site"
+  action          = "apply"
+  wait_for_action = true
+}
