@@ -1,3 +1,17 @@
+resource "volterra_cloud_credentials" "aws" {
+  name      = "${local.name_prefix}-aws-cc"
+  namespace = "system"
+
+  aws_secret_key {
+    access_key = var.xc_aws_access_key
+    secret_key {
+      clear_secret_info {
+        url = "string:///${base64encode(var.xc_aws_secret_key)}"
+      }
+    }
+  }
+}
+
 resource "volterra_aws_vpc_site" "this" {
   depends_on = [volterra_cloud_credentials.aws]
 
@@ -57,12 +71,12 @@ resource "volterra_aws_vpc_site" "this" {
   }
 }
 
-# resource "volterra_tf_params_action" "aws_site_provisioner" {
-#   depends_on = [
-#     volterra_aws_vpc_site.this
-#   ]
-#   site_name       = "${local.name_prefix}-aws"
-#   site_kind       = "aws_vpc_site"
-#   action          = "apply"
-#   wait_for_action = true
-# }
+resource "volterra_tf_params_action" "aws_site_provisioner" {
+  depends_on = [
+    volterra_aws_vpc_site.this
+  ]
+  site_name       = "${local.name_prefix}-aws"
+  site_kind       = "aws_vpc_site"
+  action          = "apply"
+  wait_for_action = true
+}

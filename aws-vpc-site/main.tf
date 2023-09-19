@@ -11,6 +11,11 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "volterra" {
+  api_p12_file = var.xc_api_p12_file
+  url          = var.xc_api_endpoint
+}
+
 resource "random_id" "id" {
   byte_length = 2
   prefix      = "${var.project_name}-"
