@@ -1,0 +1,12 @@
+#cloud-config
+write_files:
+  - path: /bootstrap/run.sh
+    encoding: b64
+    content: ${run_script}
+  - path: /bootstrap/nginx/nginx.conf
+    encoding: b64
+    content: ${nginx_conf}
+runcmd:
+  - chmod 755 /bootstrap
+  - chmod +x /bootstrap/run.sh
+  - /bootstrap/run.sh
