@@ -38,29 +38,12 @@ resource "aws_security_group" "ce_sli" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "allow any from VPC - TCP"
+    description = "allow any"
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "-1"
     cidr_blocks = [var.aws_vpc_cidr]
   }
-
-  ingress {
-    description = "allow any from VPC - ICMP"
-    from_port   = -1 # All ICMP codes
-    to_port     = -1 # All ICMP codes
-    protocol    = "icmp"
-    cidr_blocks = [var.aws_vpc_cidr]
-  }
-
-
-  # ingress {
-  #   description = "allow any"
-  #   from_port   = 0
-  #   to_port     = 0
-  #   protocol    = "-1"
-  #   cidr_blocks = [var.aws_vpc_cidr]
-  # }
 
   egress {
     from_port   = 0
@@ -71,6 +54,46 @@ resource "aws_security_group" "ce_sli" {
 
   tags = {
     Name = "${local.name_prefix}-ce_sli"
+  }
+}
+
+resource "volterra_enhanced_firewall_policy" "aws" {
+  name      = "${local.name_prefix}-aws"
+  namespace = "system"
+
+  rule_list {
+    rules {
+      allow            = true
+      inside_sources   = true
+      all_destinations = true
+
+      applications {
+        applications = ["APPLICATION_HTTP"]
+      }
+
+      advanced_action {
+        action = "LOG"
+      }
+
+      metadata {
+        name = "allow-http"
+      }
+    }
+
+    rules {
+      deny             = true
+      all_sources      = true
+      all_destinations = true
+      all_traffic      = true
+
+      advanced_action {
+        action = "LOG"
+      }
+
+      metadata {
+        name = "deny-all"
+      }
+    }
   }
 }
 
@@ -117,7 +140,6 @@ resource "volterra_aws_vpc_site" "this" {
     aws_certified_hw         = "aws-byol-multi-nic-voltmesh"
     no_dc_cluster_group      = true
     no_forward_proxy         = true
-    no_network_policy        = true
     no_outside_static_routes = true
 
     global_network_list {
@@ -151,6 +173,14 @@ resource "volterra_aws_vpc_site" "this" {
           }
           attrs = ["ROUTE_ATTR_INSTALL_FORWARDING"]
         }
+      }
+    }
+
+    active_enhanced_firewall_policies {
+      enhanced_firewall_policies {
+        tenant    = var.xc_tenant_id
+        namespace = "system"
+        name      = volterra_enhanced_firewall_policy.aws.name
       }
     }
 

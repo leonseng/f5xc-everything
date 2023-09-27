@@ -110,35 +110,6 @@ resource "google_compute_instance" "vm" {
   }
 }
 
-resource "google_compute_instance" "vm-inside" {
-  count = var.gcp_zone_count
-
-  name         = "${local.name_prefix}-vm-inside-${count.index + 1}"
-  machine_type = "e2-micro" # Change to your desired machine type
-  zone         = data.google_compute_zones.available.names[count.index]
-  tags         = ["${local.name_prefix}-vm", "${local.name_prefix}-vm-${count.index + 1}"]
-
-  boot_disk {
-    initialize_params {
-      image = data.google_compute_image.ubuntu_image.self_link
-    }
-  }
-
-  network_interface {
-    network    = google_compute_network.inside.name
-    subnetwork = google_compute_subnetwork.inside.name
-    access_config {}
-  }
-
-  metadata = {
-    ssh-keys = "ubuntu:${var.ssh_public_key}"
-    user-data = templatefile("${path.module}/files/vm/cloud-config", {
-      run_script = base64encode(file("${path.module}/files/vm/run.sh"))
-      nginx_conf = base64encode(file("${path.module}/files/vm/nginx.conf"))
-    })
-  }
-}
-
 output "gcp_inside_vpc_id" {
   value = google_compute_network.inside.id
 }
@@ -156,5 +127,9 @@ output "gcp_outside_subnet" {
 }
 
 output "gcp_vms" {
-  value = google_compute_instance.vm[*].network_interface[0].access_config[0].nat_ip
+  value = [for vm in google_compute_instance.vm : {
+    zone       = vm.zone,
+    private_ip = vm.network_interface[0].network_ip,
+    ssh_cmd    = "ssh ubuntu@${vm.network_interface[0].access_config[0].nat_ip}"
+  }]
 }

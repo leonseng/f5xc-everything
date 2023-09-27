@@ -15,7 +15,7 @@ resource "volterra_virtual_site" "this" {
   }
 }
 
-resource "volterra_site_mesh_group" "example" {
+resource "volterra_site_mesh_group" "this" {
   name      = local.name_prefix
   namespace = "system"
 

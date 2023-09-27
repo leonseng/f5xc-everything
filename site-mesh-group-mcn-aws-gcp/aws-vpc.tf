@@ -179,26 +179,6 @@ resource "aws_instance" "vm" {
   }
 }
 
-resource "aws_instance" "vm-workload" {
-  count         = var.aws_az_count
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  key_name      = aws_key_pair.ssh_access.key_name
-  subnet_id     = aws_subnet.workload[count.index].id
-  user_data = templatefile("${path.module}/files/vm/cloud-config", {
-    run_script = base64encode(file("${path.module}/files/vm/run.sh"))
-    nginx_conf = base64encode(file("${path.module}/files/vm/nginx.conf"))
-  })
-
-  vpc_security_group_ids = [
-    aws_security_group.vm.id
-  ]
-
-  tags = {
-    Name = "${local.name_prefix}-vm-${count.index + 1}"
-  }
-}
-
 output "aws_vpc_id" {
   value = aws_vpc.main.id
 }
@@ -228,5 +208,9 @@ output "aws_workload_subnets" {
 }
 
 output "aws_vms" {
-  value = aws_instance.vm[*].public_dns
+  value = [for vm in aws_instance.vm : {
+    az         = vm.availability_zone,
+    private_ip = vm.private_ip,
+    ssh_cmd    = "ssh ubuntu@${vm.public_ip}"
+  }]
 }
