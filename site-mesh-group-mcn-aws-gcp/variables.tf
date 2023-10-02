@@ -89,3 +89,13 @@ variable "xc_gcp_ce_machine_type" {
   type    = string
   default = "n1-standard-4"
 }
+
+variable "xc_namespace" {
+  type    = string
+  default = ""
+}
+
+variable "xc_create_namespace" {
+  type    = bool
+  default = false
+}

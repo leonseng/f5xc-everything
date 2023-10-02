@@ -289,3 +289,6 @@ resource "aws_route" "to_gcp_inside" {
   network_interface_id   = local.ce_inside_eni_by_az[aws_subnet.vm[count.index].availability_zone]
 }
 
+output "xc_aws_ce_inside_ips" {
+  value = data.aws_network_interface.ce_inside[*].private_ip
+}

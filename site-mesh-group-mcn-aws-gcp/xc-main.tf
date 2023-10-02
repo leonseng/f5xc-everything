@@ -43,3 +43,13 @@ resource "volterra_network_interface" "inside" {
     not_primary               = true
   }
 }
+
+locals {
+  xc_namespace = (var.xc_namespace == "") ? local.name_prefix : var.xc_namespace
+}
+
+resource "volterra_namespace" "this" {
+  count = var.xc_create_namespace ? 1 : 0
+
+  name = local.xc_namespace
+}
