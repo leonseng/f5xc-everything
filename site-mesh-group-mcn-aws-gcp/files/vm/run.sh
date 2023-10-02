@@ -32,7 +32,8 @@ docker network create custom
 docker run --restart=always -d --name httpbin --network custom kennethreitz/httpbin
 
 echo "Home is $HOME"
-export CAROOT="/root"
 docker run --restart=always -d --name nginx -p 80:80 --network custom \
   -v /bootstrap/nginx/nginx.conf:/etc/nginx/nginx.conf \
   nginx
+
+apt-get install -y iperf3

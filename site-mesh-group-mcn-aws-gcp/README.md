@@ -49,3 +49,61 @@ PING 10.0.2.2 (10.0.2.2) 56(84) bytes of data.
 ```
 
 ![Firewall Logs](assets/firewall-logs.png)
+
+
+## Performance test
+
+
+Server
+
+```
+$ iperf3 -s
+-----------------------------------------------------------
+Server listening on 5201
+-----------------------------------------------------------
+Accepted connection from 192.168.64.164, port 35676
+[  5] local 10.0.2.2 port 5201 connected to 192.168.64.164 port 35680
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   256 MBytes  2.15 Gbits/sec
+[  5]   1.00-2.00   sec   282 MBytes  2.36 Gbits/sec
+[  5]   2.00-3.00   sec   252 MBytes  2.11 Gbits/sec
+[  5]   3.00-4.00   sec   254 MBytes  2.13 Gbits/sec
+[  5]   4.00-5.00   sec   268 MBytes  2.25 Gbits/sec
+[  5]   5.00-6.00   sec   275 MBytes  2.30 Gbits/sec
+[  5]   6.00-7.00   sec   302 MBytes  2.53 Gbits/sec
+[  5]   7.00-8.00   sec   288 MBytes  2.41 Gbits/sec
+[  5]   8.00-9.00   sec   277 MBytes  2.32 Gbits/sec
+[  5]   9.00-10.00  sec   273 MBytes  2.29 Gbits/sec
+[  5]  10.00-10.04  sec  8.55 MBytes  1.64 Gbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.04  sec  2.67 GBytes  2.28 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201
+-----------------------------------------------------------
+```
+
+Client
+
+```
+$ iperf3 -c 10.0.2.2
+Connecting to host 10.0.2.2, port 5201
+[  5] local 192.168.64.164 port 35680 connected to 10.0.2.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   271 MBytes  2.27 Gbits/sec  681   1.61 MBytes
+[  5]   1.00-2.00   sec   282 MBytes  2.37 Gbits/sec    3   1.26 MBytes
+[  5]   2.00-3.00   sec   249 MBytes  2.09 Gbits/sec   44    798 KBytes
+[  5]   3.00-4.00   sec   255 MBytes  2.14 Gbits/sec    0    970 KBytes
+[  5]   4.00-5.00   sec   269 MBytes  2.25 Gbits/sec   74   1.09 MBytes
+[  5]   5.00-6.00   sec   276 MBytes  2.32 Gbits/sec    0   1.23 MBytes
+[  5]   6.00-7.00   sec   304 MBytes  2.55 Gbits/sec    0   1.36 MBytes
+[  5]   7.00-8.00   sec   286 MBytes  2.40 Gbits/sec  286   1.09 MBytes
+[  5]   8.00-9.00   sec   276 MBytes  2.32 Gbits/sec    0   1.22 MBytes
+[  5]   9.00-10.00  sec   269 MBytes  2.25 Gbits/sec    0   1.34 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  2.67 GBytes  2.30 Gbits/sec  1088             sender
+[  5]   0.00-10.04  sec  2.67 GBytes  2.28 Gbits/sec                  receiver
+
+iperf Done.
+```

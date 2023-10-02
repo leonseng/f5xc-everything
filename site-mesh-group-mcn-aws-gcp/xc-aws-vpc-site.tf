@@ -81,6 +81,25 @@ resource "volterra_enhanced_firewall_policy" "aws" {
     }
 
     rules {
+      allow            = true
+      inside_sources   = true
+      all_destinations = true
+
+      protocol_port_range {
+        protocol    = "ALL"
+        port_ranges = ["5201"]
+      }
+
+      advanced_action {
+        action = "LOG"
+      }
+
+      metadata {
+        name = "allow-iperf"
+      }
+    }
+
+    rules {
       deny             = true
       all_sources      = true
       all_destinations = true
@@ -117,7 +136,7 @@ resource "volterra_aws_vpc_site" "this" {
   name                    = "${local.name_prefix}-aws"
   namespace               = "system"
   aws_region              = var.aws_region
-  instance_type           = "t3.xlarge"
+  instance_type           = var.xc_aws_ce_instance_type
   logs_streaming_disabled = true
   no_worker_nodes         = true
   ssh_key                 = var.ssh_public_key

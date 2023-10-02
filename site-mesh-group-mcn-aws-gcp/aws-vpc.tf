@@ -115,7 +115,7 @@ resource "aws_security_group" "vm" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.aws_vpc_cidr, "${local.my_ip}/32"]
+    cidr_blocks = ["${local.my_ip}/32"]
   }
 
   ingress {
@@ -123,6 +123,22 @@ resource "aws_security_group" "vm" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # iperf
+  ingress {
+    from_port   = 5201
+    to_port     = 5201
+    protocol    = "tcp"
+    cidr_blocks = [local.gcp_vm_cidr]
+  }
+
+  # iperf
+  ingress {
+    from_port   = 5201
+    to_port     = 5201
+    protocol    = "udp"
+    cidr_blocks = [local.gcp_vm_cidr]
   }
 
   ingress {
@@ -162,7 +178,7 @@ resource "aws_key_pair" "ssh_access" {
 resource "aws_instance" "vm" {
   count         = var.aws_az_count
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  instance_type = var.aws_vm_instance_type
   key_name      = aws_key_pair.ssh_access.key_name
   subnet_id     = aws_subnet.vm[count.index].id
   user_data = templatefile("${path.module}/files/vm/cloud-config", {

@@ -12,6 +12,11 @@ variable "aws_az_count" {
   default = 1
 }
 
+variable "aws_vm_instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
 variable "gcp_project" {
   type = string
 }
@@ -33,6 +38,11 @@ variable "gcp_outside_vpc_cidr" {
 variable "gcp_zone_count" {
   type    = number
   default = 1
+}
+
+variable "gcp_vm_machine_type" {
+  type    = string
+  default = "e2-micro"
 }
 
 variable "project_name" {
@@ -68,4 +78,14 @@ variable "xc_aws_access_key" {
 variable "xc_aws_secret_key" {
   description = "AWS secret key for deploying CE site"
   type        = string
+}
+
+variable "xc_aws_ce_instance_type" {
+  type    = string
+  default = "t3.xlarge"
+}
+
+variable "xc_gcp_ce_machine_type" {
+  type    = string
+  default = "n1-standard-4"
 }

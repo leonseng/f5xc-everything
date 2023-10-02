@@ -43,7 +43,36 @@ resource "google_compute_firewall" "vm-ingress" {
   direction          = "INGRESS"
   network            = google_compute_network.inside.name
   destination_ranges = ["0.0.0.0/0"]
-  source_ranges      = [local.aws_vm_cidr, local.aws_workload_cidr, local.gcp_inside_cidr, local.gcp_outside_cidr, local.my_ip]
+  source_ranges      = [local.aws_vm_cidr, local.gcp_inside_cidr]
+  target_tags        = ["${local.name_prefix}-vm"]
+
+  log_config {
+    metadata = "INCLUDE_ALL_METADATA"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "5201"]
+  }
+
+  # iperf UDP
+  allow {
+    protocol = "udp"
+    ports    = ["5201"]
+  }
+
+
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_compute_firewall" "vm-ingress-external" {
+  name               = "${local.name_prefix}-vm-ingress-external"
+  direction          = "INGRESS"
+  network            = google_compute_network.inside.name
+  destination_ranges = [local.gcp_vm_cidr]
+  source_ranges      = [local.my_ip]
   target_tags        = ["${local.name_prefix}-vm"]
 
   log_config {
@@ -85,7 +114,7 @@ resource "google_compute_instance" "vm" {
   count = var.gcp_zone_count
 
   name         = "${local.name_prefix}-vm-${count.index + 1}"
-  machine_type = "e2-micro" # Change to your desired machine type
+  machine_type = var.gcp_vm_machine_type
   zone         = data.google_compute_zones.available.names[count.index]
   tags         = ["${local.name_prefix}-vm", "${local.name_prefix}-vm-${count.index + 1}"]
 

@@ -17,7 +17,7 @@ resource "volterra_gcp_vpc_site" "this" {
   name                    = "${local.name_prefix}-gcp"
   namespace               = "system"
   gcp_region              = var.gcp_region
-  instance_type           = "n1-standard-4"
+  instance_type           = var.xc_gcp_ce_machine_type
   logs_streaming_disabled = true
   ssh_key                 = var.ssh_public_key
 
