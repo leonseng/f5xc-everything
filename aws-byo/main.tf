@@ -53,8 +53,9 @@ provider "restapi" {
 }
 
 module "aws_byo_ce" {
-  source = "./modules/f5-xc-tf-modules/f5xc/ce/aws"
-  count  = var.aws_az_count
+  source     = "./modules/f5-xc-tf-modules/f5xc/ce/aws"
+  depends_on = [module.aws_vpc]
+  count      = var.aws_az_count
 
   owner_tag              = var.owner_tag
   is_sensitive           = false
