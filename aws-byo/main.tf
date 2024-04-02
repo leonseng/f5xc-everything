@@ -53,7 +53,8 @@ provider "restapi" {
 }
 
 module "aws_byo_ce" {
-  source     = "./modules/f5-xc-tf-modules/f5xc/ce/aws"
+  # source     = "./modules/f5-xc-tf-modules/f5xc/ce/aws"
+  source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=1dc538e"
   depends_on = [module.aws_vpc]
   count      = var.aws_az_count
 
@@ -81,11 +82,15 @@ module "aws_byo_ce" {
       f5xc_aws_vpc_az_name       = module.aws_vpc.node_subnets[count.index].az
     }
   }
-  f5xc_ce_gateway_type                 = var.f5xc_ce_gateway_type
-  f5xc_cluster_latitude                = var.f5xc_cluster_latitude
-  f5xc_cluster_longitude               = var.f5xc_cluster_longitude
-  aws_existing_vpc_id                  = module.aws_vpc.vpc_id
-  aws_security_group_rules_slo_egress  = []
-  aws_security_group_rules_slo_ingress = []
-  ssh_public_key                       = var.ssh_public_key
+  f5xc_ce_gateway_type                   = var.f5xc_ce_gateway_type
+  f5xc_cluster_latitude                  = var.f5xc_cluster_latitude
+  f5xc_cluster_longitude                 = var.f5xc_cluster_longitude
+  aws_existing_vpc_id                    = module.aws_vpc.vpc_id
+  aws_security_group_rules_slo_egress    = []
+  aws_security_group_rules_slo_ingress   = []
+  ssh_public_key                         = var.ssh_public_key
+  f5xc_enable_offline_survivability_mode = true
+  f5xc_ce_performance_enhancement_mode = {
+    perf_mode_l7_enhanced = true
+  }
 }
