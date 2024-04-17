@@ -1,0 +1,3 @@
+name,domain,vip,origin_pool_dns,advertise_sites
+lseng-test,lseng-test.test.local,10.1.1.1,backend.test.local,my-test-site
+lseng-test-2,lseng-test-2.test.local,10.1.1.2,backend.test.local,my-test-site
