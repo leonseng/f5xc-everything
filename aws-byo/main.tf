@@ -60,7 +60,7 @@ module "aws_byo_ce" {
 
   owner_tag              = var.owner_tag
   is_sensitive           = false
-  has_public_ip          = true
+  has_public_ip          = false
   create_new_aws_vpc     = false
   create_new_aws_igw     = false
   create_new_aws_slo_rt  = false

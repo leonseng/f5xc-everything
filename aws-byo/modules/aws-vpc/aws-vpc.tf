@@ -20,6 +20,48 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+resource "aws_subnet" "dmz" {
+  count = var.aws_az_count
+
+  cidr_block              = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 2), 4, count.index + 1)
+  vpc_id                  = aws_vpc.main.id
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.object_name_prefix}-dmz-${count.index + 2}"
+  }
+}
+
+resource "aws_eip" "natgw" {}
+
+resource "aws_nat_gateway" "this" {
+  depends_on = [aws_internet_gateway.this]
+
+  allocation_id = aws_eip.natgw.id
+  subnet_id     = aws_subnet.dmz[0].id
+
+  tags = {
+    Name = "${var.object_name_prefix}-natgw"
+  }
+}
+
+resource "aws_route_table" "dmz" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this.id
+  }
+}
+
+resource "aws_route_table_association" "dmz" {
+  count = var.aws_az_count
+
+  subnet_id      = aws_subnet.dmz[count.index].id
+  route_table_id = aws_route_table.dmz.id
+}
+
 resource "aws_subnet" "inside" {
   count = var.aws_az_count
 
@@ -35,10 +77,9 @@ resource "aws_subnet" "inside" {
 resource "aws_subnet" "outside" {
   count = var.aws_az_count
 
-  cidr_block              = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 1), 4, count.index + 1)
-  vpc_id                  = aws_vpc.main.id
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = true
+  cidr_block        = cidrsubnet(cidrsubnet(var.aws_vpc_cidr, 4, 1), 4, count.index + 1)
+  vpc_id            = aws_vpc.main.id
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name = "${var.object_name_prefix}-outside-${count.index + 2}"
@@ -50,7 +91,7 @@ resource "aws_route_table" "outside" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.this.id
+    gateway_id = aws_nat_gateway.this.id
   }
 }
 
@@ -60,53 +101,3 @@ resource "aws_route_table_association" "outside" {
   subnet_id      = aws_subnet.outside[count.index].id
   route_table_id = aws_route_table.outside.id
 }
-
-# resource "aws_security_group" "ce_slo" {
-#   name        = "ce_slo"
-#   description = "Allow TLS inbound"
-#   vpc_id      = aws_vpc.main.id
-
-#   ingress {
-#     description = "TLS from VPC"
-#     from_port   = 443
-#     to_port     = 443
-#     protocol    = "tcp"
-#     cidr_blocks = ["10.0.0.0/16", "10.50.0.0/16"]
-#   }
-
-#   egress {
-#     from_port        = 0
-#     to_port          = 0
-#     protocol         = "-1"
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     ipv6_cidr_blocks = ["::/0"]
-#   }
-
-#   tags = {
-#     Name = "${var.object_name_prefix}-ce_slo"
-#   }
-# }
-
-# resource "aws_security_group" "ce_sli" {
-#   name        = "ce_sli"
-#   description = "Allow any"
-#   vpc_id      = aws_vpc.main.id
-
-#   ingress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   tags = {
-#     Name = "${var.object_name_prefix}-ce_sli"
-#   }
-# }
