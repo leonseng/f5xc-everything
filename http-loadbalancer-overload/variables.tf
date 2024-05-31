@@ -18,7 +18,7 @@ variable "f5xc_namespace" {
 }
 
 variable "origin_count" {
-  description = "Number of domains/routes to overload on HTTP LB. Maximum of 32 domains supported per LB"
+  description = "Number of domains to overload on HTTP LB. Maximum of 32 domains/certs supported per LB. Use wildcard domains if more is required"
   type        = number
   default     = 2
 }

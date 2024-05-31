@@ -6,7 +6,7 @@ resource "volterra_http_loadbalancer" "app" {
 
   name                            = local.name_prefix
   namespace                       = var.f5xc_namespace
-  domains                         = [for i in range(0, var.origin_count) : "httpbin-${i}.example.com"]
+  domains                         = [for i in range(0, var.origin_count) : "httpbin-${i}.example.com"] // max domains per LB: 32. Use wildcard domains if more is required
   advertise_on_public_default_vip = true
 
   https {
@@ -19,7 +19,7 @@ resource "volterra_http_loadbalancer" "app" {
         default_security = true
       }
 
-      dynamic "certificates" {
+      dynamic "certificates" { // max certs per LB: 32. Use wildcard domains if more is required
         for_each = range(0, var.origin_count)
         content {
           tenant    = var.f5xc_tenant_id
