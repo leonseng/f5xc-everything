@@ -53,7 +53,6 @@ resource "volterra_aws_vpc_site" "this" {
       for_each = range(0, var.aws_az_count)
       content {
         aws_az_name = data.aws_availability_zones.available.names[az_nodes.key]
-        disk_size   = 80
 
         outside_subnet {
           existing_subnet_id = aws_subnet.outside[az_nodes.key].id
