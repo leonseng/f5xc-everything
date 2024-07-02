@@ -53,11 +53,12 @@ provider "restapi" {
 }
 
 module "aws_byo_ce" {
-  # source     = "./modules/f5-xc-tf-modules/f5xc/ce/aws"
-  source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=1dc538e"
+  # source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=1dc538e"
+  source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=c898950"
   depends_on = [module.aws_vpc]
   count      = var.aws_az_count
 
+  aws_region             = var.aws_region
   owner_tag              = var.owner_tag
   is_sensitive           = false
   has_public_ip          = false
@@ -71,7 +72,6 @@ module "aws_byo_ce" {
   f5xc_api_url           = var.f5xc_api_url
   f5xc_api_token         = var.f5xc_api_token
   f5xc_namespace         = "system"
-  f5xc_aws_region        = var.aws_region
   f5xc_token_name        = "${local.name_prefix}-${count.index}"
   f5xc_cluster_name      = "${local.name_prefix}-${count.index}"
   f5xc_cluster_labels    = {}
@@ -79,7 +79,7 @@ module "aws_byo_ce" {
     node0 = {
       aws_existing_slo_subnet_id = module.aws_vpc.node_subnets[count.index].outside_subnet
       aws_existing_sli_subnet_id = module.aws_vpc.node_subnets[count.index].inside_subnet
-      f5xc_aws_vpc_az_name       = module.aws_vpc.node_subnets[count.index].az
+      aws_vpc_az_name            = module.aws_vpc.node_subnets[count.index].az
     }
   }
   f5xc_ce_gateway_type                   = var.f5xc_ce_gateway_type
