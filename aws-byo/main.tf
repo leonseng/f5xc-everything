@@ -82,6 +82,7 @@ module "aws_byo_ce" {
       aws_vpc_az_name            = module.aws_vpc.node_subnets[count.index].az
     }
   }
+  f5xc_ce_machine_image                  = var.f5xc_ce_machine_image
   f5xc_ce_gateway_type                   = var.f5xc_ce_gateway_type
   f5xc_cluster_latitude                  = var.f5xc_cluster_latitude
   f5xc_cluster_longitude                 = var.f5xc_cluster_longitude
