@@ -54,7 +54,7 @@ provider "restapi" {
 
 module "aws_byo_ce" {
   # source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=1dc538e"
-  source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=c898950"
+  source     = "git::https://github.com/f5devcentral/f5-xc-tf-modules.git//f5xc/ce/aws?ref=9e302a5"
   depends_on = [module.aws_vpc]
   count      = var.aws_az_count
 

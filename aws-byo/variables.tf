@@ -52,6 +52,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = string
       eu-west-2      = string
       eu-west-1      = string
+      ap-northeast-3 = string
       ap-northeast-2 = string
       me-south-1     = string
       ap-northeast-1 = string
@@ -75,6 +76,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = string
       eu-west-2      = string
       eu-west-1      = string
+      ap-northeast-3 = string
       ap-northeast-2 = string
       me-south-1     = string
       ap-northeast-1 = string
@@ -98,6 +100,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = string
       eu-west-2      = string
       eu-west-1      = string
+      ap-northeast-3 = string
       ap-northeast-2 = string
       me-south-1     = string
       ap-northeast-1 = string
@@ -123,6 +126,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = "ami-0a39703c6fcba60c9"
       eu-west-2      = "ami-07f1671a8acf956af"
       eu-west-1      = "ami-04beae0f9774b8f48"
+      ap-northeast-3 = "ami-0e549fd46bc34dad9"
       ap-northeast-2 = "ami-0dba413f1ae8fed6d"
       me-south-1     = "ami-0dc2ff44f3c6e6f88"
       ap-northeast-1 = "ami-024976a3c31f41cd2"
@@ -146,6 +150,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = "ami-0deb487fde00d53c2"
       eu-west-2      = "ami-01277d39e5e4fd47b"
       eu-west-1      = "ami-0c0403f654ab29c83"
+      ap-northeast-3 = "ami-0ab73daa18a7bd36e"
       ap-northeast-2 = "ami-0e9545c604fb95caa"
       me-south-1     = "ami-04ee61928cc1d3678"
       ap-northeast-1 = "ami-0fcea17bd7b580959"
@@ -169,6 +174,7 @@ variable "f5xc_ce_machine_image" {
       eu-south-1     = "ami-0155b585d94aa8a47"
       eu-west-2      = "ami-0655eac30ba4816ae"
       eu-west-1      = "ami-04fa0945c604d4106"
+      ap-northeast-3 = "ami-0199149abed7da517"
       ap-northeast-2 = "ami-09bc0eeba6d90514f"
       me-south-1     = "ami-0941ccabf475035be"
       ap-northeast-1 = "ami-0769202844d44c96b"
