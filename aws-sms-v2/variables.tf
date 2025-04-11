@@ -32,11 +32,6 @@ variable "f5xc_api_url" {
   type        = string
 }
 
-variable "f5xc_api_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "f5xc_api_p12_file" {
   description = "API credential p12 file path"
   type        = string
