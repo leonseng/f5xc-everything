@@ -36,9 +36,10 @@ resource "volterra_origin_pool" "httpbin" {
   loadbalancer_algorithm = "LB_OVERRIDE"
 
   use_tls {
-    use_host_header_as_sni   = true
-    skip_server_verification = true
-    no_mtls                  = true
+    default_session_key_caching = true
+    use_host_header_as_sni      = true
+    skip_server_verification    = true
+    no_mtls                     = true
     tls_config {
       low_security = true
     }

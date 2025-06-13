@@ -4,14 +4,29 @@ resource "volterra_http_loadbalancer" "app" {
     volterra_certificate.example
   ]
 
-  name                            = local.name_prefix
-  namespace                       = var.f5xc_namespace
-  domains                         = [for i in range(0, var.origin_count) : "httpbin-${i}.example.com"] // max domains per LB: 32. Use wildcard domains if more is required
-  advertise_on_public_default_vip = true
+  name                             = local.name_prefix
+  namespace                        = var.f5xc_namespace
+  domains                          = [for i in range(0, var.origin_count) : "httpbin-${i}.example.com"] // max domains per LB: 32. Use wildcard domains if more is required
+  advertise_on_public_default_vip  = true
+  default_sensitive_data_policy    = true
+  disable_api_definition           = true
+  disable_api_discovery            = true
+  disable_malicious_user_detection = true
+  disable_malware_protection       = true
+  disable_rate_limit               = true
+  disable_threat_mesh              = true
+  disable_trust_client_ip_headers  = true
+  disable_waf                      = true
+  no_challenge                     = true
+  round_robin                      = true
+  no_service_policies              = true
+  user_id_client_ip                = true
+  l7_ddos_action_default           = true
 
   https {
-    http_redirect = true
-    port          = 443
+    enable_path_normalize = true
+    http_redirect         = true
+    port                  = 443
     tls_cert_params {
       no_mtls = true
 
@@ -42,6 +57,8 @@ resource "volterra_http_loadbalancer" "app" {
           prefix = "/"
         }
 
+        auto_host_rewrite = true
+
         headers {
           # name  = "X-Envoy-Original-Authority"  // doesn't work
           name  = "host"
@@ -57,6 +74,16 @@ resource "volterra_http_loadbalancer" "app" {
         }
 
         advanced_options {
+          common_buffering          = true
+          common_hash_policy        = true
+          default_retry_policy      = true
+          disable_mirroring         = true
+          disable_prefix_rewrite    = true
+          disable_spdy              = true
+          disable_web_socket_config = true
+          priority                  = "DEFAULT"
+          retract_cluster           = true
+
           request_headers_to_add {
             name   = "x-overload-route"
             value  = "route-${routes.value}"
