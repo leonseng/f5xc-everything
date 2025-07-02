@@ -16,12 +16,16 @@ resource "volterra_http_loadbalancer" "app" {
   disable_rate_limit               = true
   disable_threat_mesh              = true
   disable_trust_client_ip_headers  = true
+  disable_api_testing              = true
   disable_waf                      = true
   no_challenge                     = true
   round_robin                      = true
   no_service_policies              = true
   user_id_client_ip                = true
-  l7_ddos_action_default           = true
+  l7_ddos_protection {
+    ddos_policy_none = false
+    mitigation_block = true
+  }
 
   https {
     enable_path_normalize = true
