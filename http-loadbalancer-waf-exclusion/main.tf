@@ -189,6 +189,11 @@ resource "volterra_http_loadbalancer" "app" {
           name      = volterra_origin_pool.httpbin.name
         }
       }
+
+      advanced_options {
+        inherited_waf_exclusion = true
+        waf_exclusion_policy {}
+      }
     }
 
   }
