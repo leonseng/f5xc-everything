@@ -1,6 +1,6 @@
 variable "project_name" {
   type    = string
-  default = "http-lb-overload"
+  default = "http-lb-waf-exclusion"
 }
 
 variable "f5xc_tenant_id" {

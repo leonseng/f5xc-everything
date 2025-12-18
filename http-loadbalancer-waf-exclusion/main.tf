@@ -52,8 +52,16 @@ resource "volterra_origin_pool" "httpbin" {
   }
 
   origin_servers {
-    public_name {
-      dns_name = "httpbin.org"
+    private_name {
+      outside_network = true
+      dns_name        = "test.com"
+      site_locator {
+        site {
+          name      = "lseng-proxmox"
+          namespace = "system"
+          tenant    = var.f5xc_tenant_id
+        }
+      }
     }
   }
 }
@@ -119,7 +127,7 @@ resource "volterra_http_loadbalancer" "app" {
   no_service_policies              = true
   user_id_client_ip                = true
   l7_ddos_protection {
-    ddos_policy_none = false
+    ddos_policy_none = true
     mitigation_block = true
   }
 
@@ -144,13 +152,12 @@ resource "volterra_http_loadbalancer" "app" {
   }
 
   waf_exclusion {
-    waf_exclusion_policy {}
     waf_exclusion_inline_rules {
-
       rules {
         metadata {
           name = "test"
         }
+        any_path   = true
         any_domain = true
         app_firewall_detection_control {
           exclude_bot_name_contexts {
@@ -191,8 +198,16 @@ resource "volterra_http_loadbalancer" "app" {
       }
 
       advanced_options {
-        inherited_waf_exclusion = true
-        waf_exclusion_policy {}
+        common_buffering          = true
+        common_hash_policy        = true
+        default_retry_policy      = true
+        disable_mirroring         = true
+        disable_prefix_rewrite    = true
+        disable_spdy              = true
+        disable_web_socket_config = true
+        priority                  = "DEFAULT"
+        retract_cluster           = true
+        inherited_waf_exclusion   = true
       }
     }
 
