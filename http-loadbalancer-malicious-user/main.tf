@@ -94,25 +94,25 @@ resource "volterra_certificate" "example" {
   }
 }
 
-# resource "volterra_malicious_user_mitigation" "mitigation_rule" {
-#   name      = local.name_prefix
-#   namespace = var.f5xc_namespace
+resource "volterra_malicious_user_mitigation" "mitigation_rule" {
+  name      = local.name_prefix
+  namespace = var.f5xc_namespace
 
-#   mitigation_type {
-#     rules {
-#       mitigation_action {
-#         block_temporarily    = true
-#         captcha_challenge    = false
-#         javascript_challenge = false
-#       }
-#       threat_level {
-#         high   = true
-#         medium = false
-#         low    = false
-#       }
-#     }
-#   }
-# }
+  mitigation_type {
+    rules {
+      mitigation_action {
+        block_temporarily    = true
+        captcha_challenge    = false
+        javascript_challenge = false
+      }
+      threat_level {
+        high   = true
+        medium = false
+        low    = false
+      }
+    }
+  }
+}
 
 resource "volterra_http_loadbalancer" "app" {
   depends_on = [
@@ -120,32 +120,32 @@ resource "volterra_http_loadbalancer" "app" {
     volterra_certificate.example
   ]
 
-  name                             = local.name_prefix
-  namespace                        = var.f5xc_namespace
-  domains                          = ["httpbin.example.com"]
-  advertise_on_public_default_vip  = true
-  default_sensitive_data_policy    = true
-  disable_api_definition           = true
-  disable_api_discovery            = true
-  disable_malicious_user_detection = true
-  disable_malware_protection       = true
-  disable_rate_limit               = true
-  disable_threat_mesh              = true
-  disable_trust_client_ip_headers  = true
-  disable_api_testing              = true
-  disable_waf                      = true
-  no_challenge                     = true
-  round_robin                      = true
-  no_service_policies              = true
-  user_id_client_ip                = true
+  name                            = local.name_prefix
+  namespace                       = var.f5xc_namespace
+  domains                         = ["httpbin.example.com"]
+  advertise_on_public_default_vip = true
+  default_sensitive_data_policy   = true
+  disable_api_definition          = true
+  disable_api_discovery           = true
+  enable_malicious_user_detection = true
+  disable_malware_protection      = true
+  disable_rate_limit              = true
+  disable_threat_mesh             = true
+  disable_trust_client_ip_headers = true
+  disable_api_testing             = true
+  disable_waf                     = true
+  no_challenge                    = true
+  round_robin                     = true
+  no_service_policies             = true
+  user_id_client_ip               = true
 
-  # policy_based_challenge {
-  #   no_challenge = true
-  #   malicious_user_mitigation {
-  #     name      = local.name_prefix
-  #     namespace = var.f5xc_namespace
-  #   }
-  # }
+  enable_challenge {
+    malicious_user_mitigation {
+      tenant    = var.f5xc_tenant_id
+      namespace = var.f5xc_namespace
+      name      = local.name_prefix
+    }
+  }
 
   https {
     enable_path_normalize = true
