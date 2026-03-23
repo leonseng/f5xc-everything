@@ -94,25 +94,25 @@ resource "volterra_certificate" "example" {
   }
 }
 
-resource "volterra_malicious_user_mitigation" "mitigation_rule" {
-  name      = local.name_prefix
-  namespace = var.f5xc_namespace
+# resource "volterra_malicious_user_mitigation" "mitigation_rule" {
+#   name      = local.name_prefix
+#   namespace = var.f5xc_namespace
 
-  mitigation_type {
-    rules {
-      mitigation_action {
-        block_temporarily    = true
-        captcha_challenge    = false
-        javascript_challenge = false
-      }
-      threat_level {
-        high   = true
-        medium = false
-        low    = false
-      }
-    }
-  }
-}
+#   mitigation_type {
+#     rules {
+#       mitigation_action {
+#         block_temporarily    = true
+#         captcha_challenge    = false
+#         javascript_challenge = false
+#       }
+#       threat_level {
+#         high   = true
+#         medium = false
+#         low    = false
+#       }
+#     }
+#   }
+# }
 
 resource "volterra_http_loadbalancer" "app" {
   depends_on = [
@@ -139,13 +139,13 @@ resource "volterra_http_loadbalancer" "app" {
   no_service_policies              = true
   user_id_client_ip                = true
 
-  policy_based_challenge {
-    no_challenge = true
-    malicious_user_mitigation {
-      name      = local.name_prefix
-      namespace = var.f5xc_namespace
-    }
-  }
+  # policy_based_challenge {
+  #   no_challenge = true
+  #   malicious_user_mitigation {
+  #     name      = local.name_prefix
+  #     namespace = var.f5xc_namespace
+  #   }
+  # }
 
   https {
     enable_path_normalize = true
