@@ -24,10 +24,10 @@ resource "volterra_http_loadbalancer" "app" {
   user_id_client_ip                = true
 
   l7_ddos_protection {
-    clientside_action_none = false
-    ddos_policy_none       = false
-    default_rps_threshold  = false
-    mitigation_block       = false
+    clientside_action_none = true
+    ddos_policy_none       = true
+    default_rps_threshold  = true
+    mitigation_block       = true
     rps_threshold          = 0
   }
 
