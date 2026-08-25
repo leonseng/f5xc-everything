@@ -17,7 +17,12 @@ Example showing migration of Terraform object between old and new state files, a
   % terraform -chdir=old state mv -state=terraform.tfstate -state-out=../new/terraform.tfstate volterra_http_loadbalancer.app volterra_http_loadbalancer.app
   Move "volterra_http_loadbalancer.app" to "volterra_http_loadbalancer.app"
   ```
-4. Run plan in [new/](./new/) to verify no changes are required
+4. Create `new/terraform.tfvars` with output values from [old/](./old/)
+  ```
+  terraform -chdir=old output > new/terraform.tfvars
+  ```
+
+5. Run plan in [new/](./new/) to verify no changes are required
   ```
   % terraform -chdir=new plan
   volterra_http_loadbalancer.app: Refreshing state... [id=d56995f2-db93-4c7d-ae65-8c4d9b97a027]
